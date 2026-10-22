@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MailQR — Email QR Generator</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<header><div class="logo">✉</div><div><b>MailQR</b><small>Email compose link & QR generator</small></div></header>
+<main>
+<section class="panel analytics" aria-label="Link analytics">
+<p class="eyebrow">LINK ANALYTICS</p><h2>Share link statistics</h2>
+<div class="stats-grid">
+  <div class="stat-card"><span>Total link opens</span><strong>{{ stats.total_opens }}</strong></div>
+  <div class="stat-card"><span>Unique visitors</span><strong>{{ stats.unique_visitors }}</strong></div>
+</div>
+<p class="hint">Counts opens of generated share links only. Unique visitors use a random browser cookie; no IP address is stored. Clearing cookies or using another browser/device may count the same person again.</p>
+{% if tracked_link %}<p class="hint">This visit was counted as a share-link open.</p>{% endif %}
+</section>
+<section class="panel">
+<p class="eyebrow">CREATE EMAIL</p><h1>Build your email QR</h1>
+<p class="muted">Fill the fields, generate a QR code and links.</p>
+<form id="emailForm">
+<label for="to">To *</label><input id="to" required value="{{ values.to }}" placeholder="recipient@example.com">
+<div class="two"><div><label for="cc">CC</label><input id="cc" value="{{ values.cc }}" placeholder="cc@example.com"></div>
+<div><label for="bcc">BCC</label><input id="bcc" value="{{ values.bcc }}" placeholder="bcc@example.com"></div></div>
+<label for="subject">Subject</label><input id="subject" value="{{ values.subject }}" placeholder="Email subject">
+<label for="body">Body</label><textarea id="body" rows="10" placeholder="Write your email...">{{ values.body }}</textarea>
+<label for="attachments">Attachments (optional)</label><input id="attachments" type="file" multiple>
+<p class="hint">Files must be attached manually in Gmail after it opens; a QR/link cannot transfer local files into Gmail.</p>
+<div class="buttons"><button class="primary" type="submit">Generate QR & Links</button><button class="secondary" type="button" id="clear">Clear</button></div>
+</form>
+</section>
+<section class="panel">
+<p class="eyebrow">YOUR RESULT</p><h2>QR code & links</h2>
+<div id="qrcode"></div>
+<p class="hint">QR contains a standard mailto link. App behavior depends on the phone and scanner.</p>
+<div id="results" hidden>
+<label for="shareUrl">Shareable webpage link</label><div class="copyrow"><input id="shareUrl" readonly><button class="secondary" data-copy="shareUrl">Copy</button></div>
+<label for="gmailUrl">Android Gmail intent link</label><div class="copyrow"><input id="gmailUrl" readonly><button class="secondary" data-copy="gmailUrl">Copy</button></div>
+<a id="openGmail" class="button primary" href="#">Open Gmail App</a>
+<a id="openMail" class="button secondary" href="#">Open Default Email App</a>
+<button id="download" class="secondary full">Download QR PNG</button>
+<p id="status" class="hint" role="status"></p>
+</div>
+<div class="notice"><b>Important</b><ul>
+<li>Gmail app opening is not guaranteed on every phone.</li>
+<li>CC/BCC support varies by email app; test before sharing.</li>
+<li>Attachments must be selected again inside Gmail.</li>
+<li>Anyone with a share link can read the email details in it.</li>
+</ul></div>
+</section>
+</main><footer>MailQR · No email is sent by this website. Analytics count link opens, not emails sent.</footer>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body></html>
